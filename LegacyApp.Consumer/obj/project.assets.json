@@ -1253,27 +1253,29 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "d:\\Projects\\Source\\780.ir-Refactoring-Task\\LegacyApp.Consumer\\LegacyApp.Consumer.csproj",
+      "projectUniqueName": "D:\\Projects\\Source\\780.ir-Refactoring-Task\\LegacyApp.Consumer\\LegacyApp.Consumer.csproj",
       "projectName": "LegacyApp.Consumer",
-      "projectPath": "d:\\Projects\\Source\\780.ir-Refactoring-Task\\LegacyApp.Consumer\\LegacyApp.Consumer.csproj",
+      "projectPath": "D:\\Projects\\Source\\780.ir-Refactoring-Task\\LegacyApp.Consumer\\LegacyApp.Consumer.csproj",
       "packagesPath": "C:\\Users\\Marzieh\\.nuget\\packages\\",
-      "outputPath": "d:\\Projects\\Source\\780.ir-Refactoring-Task\\LegacyApp.Consumer\\obj\\",
+      "outputPath": "D:\\Projects\\Source\\780.ir-Refactoring-Task\\LegacyApp.Consumer\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Marzieh\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Marzieh\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net5.0": {
           "targetAlias": "net5.0",
           "projectReferences": {
-            "d:\\Projects\\Source\\780.ir-Refactoring-Task\\LegacyApp\\LegacyApp.csproj": {
-              "projectPath": "d:\\Projects\\Source\\780.ir-Refactoring-Task\\LegacyApp\\LegacyApp.csproj"
+            "D:\\Projects\\Source\\780.ir-Refactoring-Task\\LegacyApp\\LegacyApp.csproj": {
+              "projectPath": "D:\\Projects\\Source\\780.ir-Refactoring-Task\\LegacyApp\\LegacyApp.csproj"
             }
           }
         }
@@ -1321,7 +1323,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.407\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
       }
     }
   }

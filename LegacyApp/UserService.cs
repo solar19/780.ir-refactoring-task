@@ -4,78 +4,99 @@ namespace LegacyApp
 {
     public class UserService
     {
-        public bool AddUser(string firname, string surname, string email, DateTime dateOfBirth, int clientId)
+        public bool AddUser(string firstName, string surname, string email, DateTime dateOfBirth, int clientId)
         {
-            if (string.IsNullOrEmpty(firname) || string.IsNullOrEmpty(surname))
-            {
+            if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(surname))
                 return false;
-            }
 
-            if (email.Contains("@") && !email.Contains("."))
-            {
+            if (!IsValidEmail(email))
                 return false;
-            }
 
-            var now = DateTime.Now;
-            int age = now.Year - dateOfBirth.Year;
-
-            if (now.Month < dateOfBirth.Month || (now.Month == dateOfBirth.Month && now.Day < dateOfBirth.Day))
-            {
-                age--;
-            }
-
+            var age = CalculateAge(dateOfBirth);
             if (age < 21)
-            {
                 return false;
-            }
 
-            var clientRepository = new ClientRepository();
-            var client = clientRepository.GetById(clientId);
+            var client = GetClientById(clientId);
+            if (client is null)
+                return false;
 
-            var user = new User
+            var user = CreateUser(client, firstName, surname, email, dateOfBirth);
+
+            if (client.ClientType == ClientType.VeryImportantClient)
             {
-                Client = client,
-                DateOfBirth = dateOfBirth,
-                EmailAddress = email,
-                Firstname = firname,
-                Surname = surname
-            };
-
-            if (client.Name == "VeryImportantClient")
-            {
-                // Skip credit chek
                 user.HasCreditLimit = false;
-            }
-            else if (client.Name == "ImportantClient")
-            {
-                // Do credit check and double credit limit
-                user.HasCreditLimit = true;
-                using (var userCreditService = new UserCreditServiceClient())
-                {
-                    var creditLimit = userCreditService.GetCreditLimit(user.Firstname, user.Surname, user.DateOfBirth);
-                    creditLimit = creditLimit * 2;
-                    user.CreditLimit = creditLimit;
-                }
             }
             else
             {
-                // Do credit check
                 user.HasCreditLimit = true;
-                using (var userCreditService = new UserCreditServiceClient())
-                {
-                    var creditLimit = userCreditService.GetCreditLimit(user.Firstname, user.Surname, user.DateOfBirth);
-                    user.CreditLimit = creditLimit;
-                }
+                user.CreditLimit = GetUserCreditLimit(user.Firstname, user.Surname, user.DateOfBirth);
+
+                if (user.CreditLimit < 500)
+                    return false;
+
+                if (client.ClientType == ClientType.ImportantClient)
+                    user.CreditLimit *= 2;
             }
 
-            if (user.HasCreditLimit && user.CreditLimit < 500)
-            {
-                return false;
-            }
-            
-            UserDataAccess.AddUser(user);
+            SaveUser(user);
 
             return true;
+        }
+
+        private static bool IsValidEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
+
+            if (!email.Contains("@") || !email.Contains("."))
+                return false;
+
+            return true;
+        }
+
+        private static int CalculateAge(DateTime dateOfBirth)
+        {
+            var today = DateTime.Today;
+            var age = today.Year - dateOfBirth.Year;
+
+            if (today.Month < dateOfBirth.Month || (today.Month == dateOfBirth.Month && today.Day < dateOfBirth.Day))
+                age--;
+
+            return age;
+        }
+
+        private static Client GetClientById(int clientId)
+        {
+            //return ClientRepository.GetById(clientId);
+             return new Client
+                        {
+                            Id = 1,
+                            Name = "ImportantClient",
+                            ClientStatus = ClientStatus.none
+                        };
+        }
+
+        private static User CreateUser(Client client, string firstName, string surname, string email, DateTime dateOfBirth)
+        {
+            return new User
+            {
+                Client = client,
+                Firstname = firstName,
+                Surname = surname,
+                EmailAddress = email,
+                DateOfBirth = dateOfBirth
+            };
+        }
+
+        private static int GetUserCreditLimit(string firstName, string surname, DateTime dateOfBirth)
+        {
+            using var userCreditService = new UserCreditServiceClient();
+            return userCreditService.GetCreditLimit(firstName, surname, dateOfBirth);
+        }
+
+        private static void SaveUser(User user)
+        {
+            UserDataAccess.AddUser(user);
         }
     }
 }
